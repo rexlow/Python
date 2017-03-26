@@ -1,0 +1,55 @@
+<!--Polynomial Dataset-->
+<!--All Attribute-->
+
+<?xml version="1.0" encoding="UTF-8"?><process version="7.4.000">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="7.4.000" expanded="true" name="Process">
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="7.4.000" expanded="true" height="68" name="Retrieve Polynomial" width="90" x="45" y="34">
+        <parameter key="repository_entry" value="//Samples/data/Polynomial"/>
+      </operator>
+      <operator activated="true" class="select_attributes" compatibility="7.4.000" expanded="true" height="82" name="Select Attributes" width="90" x="246" y="34">
+        <parameter key="attribute" value="a1"/>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="7.4.000" expanded="true" height="145" name="Cross Validation" width="90" x="447" y="34">
+        <parameter key="sampling_type" value="linear sampling"/>
+        <process expanded="true">
+          <operator activated="true" class="linear_regression" compatibility="7.4.000" expanded="true" height="103" name="Linear Regression" width="90" x="112" y="34"/>
+          <connect from_port="training set" to_op="Linear Regression" to_port="training set"/>
+          <connect from_op="Linear Regression" from_port="model" to_port="model"/>
+          <portSpacing port="source_training set" spacing="0"/>
+          <portSpacing port="sink_model" spacing="0"/>
+          <portSpacing port="sink_through 1" spacing="0"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="7.4.000" expanded="true" height="82" name="Apply Model" width="90" x="45" y="34">
+            <list key="application_parameters"/>
+          </operator>
+          <operator activated="true" class="performance" compatibility="7.4.000" expanded="true" height="82" name="Performance" width="90" x="179" y="34"/>
+          <connect from_port="model" to_op="Apply Model" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model" to_port="unlabelled data"/>
+          <connect from_op="Apply Model" from_port="labelled data" to_op="Performance" to_port="labelled data"/>
+          <connect from_op="Performance" from_port="performance" to_port="performance 1"/>
+          <portSpacing port="source_model" spacing="0"/>
+          <portSpacing port="source_test set" spacing="0"/>
+          <portSpacing port="source_through 1" spacing="0"/>
+          <portSpacing port="sink_test set results" spacing="0"/>
+          <portSpacing port="sink_performance 1" spacing="0"/>
+          <portSpacing port="sink_performance 2" spacing="0"/>
+        </process>
+      </operator>
+      <connect from_op="Retrieve Polynomial" from_port="output" to_op="Select Attributes" to_port="example set input"/>
+      <connect from_op="Select Attributes" from_port="example set output" to_op="Cross Validation" to_port="example set"/>
+      <connect from_op="Cross Validation" from_port="model" to_port="result 1"/>
+      <connect from_op="Cross Validation" from_port="example set" to_port="result 2"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+    </process>
+  </operator>
+</process>
