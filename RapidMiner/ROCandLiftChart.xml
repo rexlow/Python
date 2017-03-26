@@ -1,0 +1,56 @@
+<!--ROC and Lift Chart-->
+<!--Comparing performance between Naive Bayes and Decision Tree-->
+
+<?xml version="1.0" encoding="UTF-8"?><process version="7.4.000">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="7.4.000" expanded="true" name="Process">
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="7.4.000" expanded="true" height="68" name="Retrieve Sonar" width="90" x="45" y="34">
+        <parameter key="repository_entry" value="//Samples/data/Sonar"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="7.4.000" expanded="true" height="124" name="Multiply" width="90" x="179" y="34"/>
+      <operator activated="true" class="naive_bayes" compatibility="7.4.000" expanded="true" height="82" name="Naive Bayes" width="90" x="179" y="187"/>
+      <operator activated="true" class="apply_model" compatibility="7.4.000" expanded="true" height="82" name="Apply Model" width="90" x="380" y="187">
+        <list key="application_parameters"/>
+      </operator>
+      <operator activated="true" class="create_lift_chart" compatibility="7.4.000" expanded="true" height="103" name="Create Lift Chart" width="90" x="581" y="136">
+        <parameter key="target_class" value="Rock"/>
+      </operator>
+      <operator activated="true" class="compare_rocs" compatibility="7.4.000" expanded="true" height="82" name="Compare ROCs" width="90" x="581" y="34">
+        <process expanded="true">
+          <operator activated="true" class="naive_bayes" compatibility="7.4.000" expanded="true" height="82" name="Naive Bayes (2)" width="90" x="179" y="34"/>
+          <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="7.4.000" expanded="true" height="82" name="Decision Tree" width="90" x="179" y="136"/>
+          <connect from_port="train 1" to_op="Naive Bayes (2)" to_port="training set"/>
+          <connect from_port="train 2" to_op="Decision Tree" to_port="training set"/>
+          <connect from_op="Naive Bayes (2)" from_port="model" to_port="model 1"/>
+          <connect from_op="Decision Tree" from_port="model" to_port="model 2"/>
+          <portSpacing port="source_train 1" spacing="0"/>
+          <portSpacing port="source_train 2" spacing="0"/>
+          <portSpacing port="source_train 3" spacing="0"/>
+          <portSpacing port="sink_model 1" spacing="0"/>
+          <portSpacing port="sink_model 2" spacing="0"/>
+          <portSpacing port="sink_model 3" spacing="0"/>
+        </process>
+      </operator>
+      <connect from_op="Retrieve Sonar" from_port="output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="Compare ROCs" to_port="example set"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="Naive Bayes" to_port="training set"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="Apply Model" to_port="unlabelled data"/>
+      <connect from_op="Naive Bayes" from_port="model" to_op="Apply Model" to_port="model"/>
+      <connect from_op="Apply Model" from_port="labelled data" to_op="Create Lift Chart" to_port="example set"/>
+      <connect from_op="Apply Model" from_port="model" to_op="Create Lift Chart" to_port="model"/>
+      <connect from_op="Create Lift Chart" from_port="example set" to_port="result 2"/>
+      <connect from_op="Create Lift Chart" from_port="lift pareto chart" to_port="result 3"/>
+      <connect from_op="Compare ROCs" from_port="rocComparison" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+    </process>
+  </operator>
+</process>

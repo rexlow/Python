@@ -12,3 +12,6 @@ Equation acquired:
 Equation acquired 
 
 ```F(a1,a2,a3,a4,a5) = 31.736 a1+ 42.948 a2 + 23.773 a3 + 3.706 * a4 – 4.184 a5 -304.228```
+
+# ROC and Life Chart
+Comparing performance between Naive Bayes and Decision Tree
