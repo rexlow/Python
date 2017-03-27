@@ -15,3 +15,6 @@ Equation acquired
 
 # ROC and Life Chart
 Comparing performance between Naive Bayes and Decision Tree
+
+# Simple ROC comparison
+Ridley dataset
