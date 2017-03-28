@@ -2,7 +2,7 @@ import json
 from dicttoxml import dicttoxml
 from pprint import pprint
 
-with open('instadataset.json') as data_file:    
+with open('data.json') as data_file:    
     json_obj = json.load(data_file)
     xml = dicttoxml(json_obj)
     print(xml)
